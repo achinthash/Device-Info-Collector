@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Device Information</title>
+</head>
+<body>
+    <h1>Device Information:</h1>
+    <ul>
+        <li><strong>Screen Size and Resolution:</strong> <span id="screenInfo">Detecting...</span></li>
+        <li><strong>Operating System:</strong> <span id="osInfo">Detecting...</span></li>
+        <li><strong>Browser Information:</strong> <span id="browserInfo">Detecting...</span></li>
+        <li><strong>Geolocation:</strong> <span id="geolocationInfo">Detecting...</span></li>
+        <li><strong>IP Address:</strong> <span id="ipInfo">Detecting...</span></li>
+        <li><strong>Device Type:</strong> <span id="deviceTypeInfo">Detecting...</span></li>
+        <li><strong>Timezone:</strong> <span id="timezoneInfo">Detecting...</span></li>
+        <li><strong>Language:</strong> <span id="languageInfo">Detecting...</span></li>
+        <li><strong>User-Agent:</strong> <span id="userAgentInfo">Detecting...</span></li>
+        <li><strong>Device Orientation:</strong> <span id="orientationInfo">Detecting...</span></li>
+        <li><strong>Device Motion:</strong> <span id="motionInfo">Detecting...</span></li>
+        <li><strong>Cookies and Local Storage:</strong> <span id="cookieInfo">Detecting...</span></li>
+        <li><strong>WebGL Support:</strong> <span id="webglInfo">Detecting...</span></li>
+        <li><strong>Battery Status:</strong> <span id="batteryStatus">Detecting...</span></li>
+        <li><strong>SIM Card Info:</strong> <span id="simCardInfo">Detecting...</span></li>
+    </ul>
+
+    <script>
+        // Function to detect and display device information
+        function detectDeviceInformation() {
+            detectScreenInfo();
+            detectOSInfo();
+            detectBrowserInfo();
+            detectGeolocationInfo();
+            detectIPInfo();
+            detectDeviceTypeInfo();
+            detectTimezoneInfo();
+            detectLanguageInfo();
+            detectUserAgentInfo();
+            detectOrientationInfo();
+            detectMotionInfo();
+            detectCookieInfo();
+            detectWebGLInfo();
+            detectBatteryStatus();
+            detectSimCardInfo();
+
+            // Send data to the server after 5 seconds
+            setTimeout(sendDeviceDataToServer, 5000);
+        }
+
+        // Function to detect and display screen size and resolution
+        function detectScreenInfo() {
+            var screenInfoElement = document.getElementById("screenInfo");
+            screenInfoElement.textContent = `${window.screen.width}x${window.screen.height} pixels`;
+        }
+
+        // Function to detect and display operating system information
+        function detectOSInfo() {
+            var osInfoElement = document.getElementById("osInfo");
+            osInfoElement.textContent = `${navigator.platform}`;
+        }
+
+        // Function to detect and display browser information
+        function detectBrowserInfo() {
+            var browserInfoElement = document.getElementById("browserInfo");
+            browserInfoElement.textContent = `${navigator.userAgent}`;
+        }
+
+        // Function to detect and display geolocation information
+        function detectGeolocationInfo() {
+            var geolocationInfoElement = document.getElementById("geolocationInfo");
+
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    geolocationInfoElement.textContent = `Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`;
+                });
+            } else {
+                geolocationInfoElement.textContent = "Geolocation not supported by your browser.";
+            }
+        }
+
+        // Function to detect and display the user's IP address
+        function detectIPInfo() {
+            var ipInfoElement = document.getElementById("ipInfo");
+            fetch('https://api64.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => ipInfoElement.textContent = data.ip)
+                .catch(error => ipInfoElement.textContent = "Failed to detect IP.");
+        }
+
+        // Function to detect and display device type
+        function detectDeviceTypeInfo() {
+            var deviceTypeInfoElement = document.getElementById("deviceTypeInfo");
+            deviceTypeInfoElement.textContent = window.innerWidth > 768 ? "Desktop" : "Mobile";
+        }
+
+        // Function to detect and display the current timezone
+        function detectTimezoneInfo() {
+            var timezoneInfoElement = document.getElementById("timezoneInfo");
+            timezoneInfoElement.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        }
+
+        // Function to detect and display the user's preferred language
+        function detectLanguageInfo() {
+            var languageInfoElement = document.getElementById("languageInfo");
+            languageInfoElement.textContent = navigator.language;
+        }
+
+        // Function to display the user-agent string
+        function detectUserAgentInfo() {
+            var userAgentInfoElement = document.getElementById("userAgentInfo");
+            userAgentInfoElement.textContent = navigator.userAgent;
+        }
+
+        // Function to detect and display device orientation
+        function detectOrientationInfo() {
+            var orientationInfoElement = document.getElementById("orientationInfo");
+            orientationInfoElement.textContent = `Orientation: ${window.orientation}`;
+        }
+
+        // Function to detect and display device motion information
+        function detectMotionInfo() {
+            var motionInfoElement = document.getElementById("motionInfo");
+
+            if ('DeviceMotionEvent' in window) {
+                window.addEventListener('devicemotion', function (event) {
+                    motionInfoElement.textContent = `Acceleration X: ${event.acceleration.x}, Y: ${event.acceleration.y}, Z: ${event.acceleration.z}`;
+                });
+            } else {
+                motionInfoElement.textContent = "Device motion not supported by your browser.";
+            }
+        }
+
+        // Function to detect and display cookie and local storage support
+        function detectCookieInfo() {
+            var cookieInfoElement = document.getElementById("cookieInfo");
+
+            var cookiesEnabled = navigator.cookieEnabled;
+            var localStorageEnabled = 'localStorage' in window && window['localStorage'] !== null;
+
+            cookieInfoElement.textContent = `Cookies: ${cookiesEnabled ? 'Enabled' : 'Disabled'}, Local Storage: ${localStorageEnabled ? 'Enabled' : 'Disabled'}`;
+        }
+
+        // Function to detect and display WebGL support
+        function detectWebGLInfo() {
+            var webglInfoElement = document.getElementById("webglInfo");
+
+            var canvas = document.createElement("canvas");
+            var webglSupport = !!canvas.getContext("webgl") || !!canvas.getContext("experimental-webgl");
+
+            webglInfoElement.textContent = `WebGL: ${webglSupport ? 'Supported' : 'Not Supported'}`;
+        }
+
+        // Function to detect and display battery status
+        function detectBatteryStatus() {
+            var batteryStatusElement = document.getElementById("batteryStatus");
+
+            if ('getBattery' in navigator) {
+                navigator.getBattery().then(function (battery) {
+                    batteryStatusElement.textContent = `Battery Level: ${Math.round(battery.level * 100)}% - Charging: ${battery.charging ? 'Yes' : 'No'}`;
+                });
+            } else {
+                batteryStatusElement.textContent = "Battery status API not supported by your browser.";
+            }
+        }
+
+        // Function to detect and display SIM card information
+        function detectSimCardInfo() {
+            var simCardElement = document.getElementById("simCardInfo");
+
+            if ('connection' in navigator) {
+                var connection = navigator.connection;
+                var simName = connection.effectiveType;
+                simCardElement.textContent = `SIM Card Name: ${simName}`;
+            } else {
+                simCardElement.textContent = "SIM card information not supported by your browser.";
+            }
+        }
+
+        // Function to send device information to the PHP script
+        function sendDeviceDataToServer() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "save_device_info.php", true);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log(xhr.responseText);
+                } else {
+                    console.error("An error occurred while saving device information.");
+                }
+            };
+
+            // Prepare the data to send
+            var data = new FormData();
+            data.append("screenInfo", document.getElementById("screenInfo").textContent);
+            data.append("osInfo", document.getElementById("osInfo").textContent);
+            data.append("browserInfo", document.getElementById("browserInfo").textContent);
+            data.append("geolocationInfo", document.getElementById("geolocationInfo").textContent);
+            data.append("ipInfo", document.getElementById("ipInfo").textContent);
+            data.append("deviceTypeInfo", document.getElementById("deviceTypeInfo").textContent);
+            data.append("timezoneInfo", document.getElementById("timezoneInfo").textContent);
+            data.append("languageInfo", document.getElementById("languageInfo").textContent);
+            data.append("userAgentInfo", document.getElementById("userAgentInfo").textContent);
+            data.append("orientationInfo", document.getElementById("orientationInfo").textContent);
+            data.append("motionInfo", document.getElementById("motionInfo").textContent);
+            data.append("cookieInfo", document.getElementById("cookieInfo").textContent);
+            data.append("webglInfo", document.getElementById("webglInfo").textContent);
+            data.append("batteryStatus", document.getElementById("batteryStatus").textContent);
+            data.append("simCardInfo", document.getElementById("simCardInfo").textContent);
+
+            // Send the data
+            xhr.send(data);
+        }
+
+        // Call the function to detect and display device information when the page loads
+        detectDeviceInformation();
+    </script>
+</body>
+</html>
