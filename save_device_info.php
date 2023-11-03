@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$database = "device_info";
+$database = "device_info"; //add your database
 
 // Create a connection to the database
 $conn = new mysqli($servername, $username, $password, $database);
